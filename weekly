@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+
+def parse(journal):
+    with open(journal) as f:
+        data = f.read().strip().split('\n\n')
+        topics = {}
+        for block in data:
+            rows = block.strip().split('\n')
+            title = rows[0].strip()
+
+            if not title:
+                continue
+
+            rows = rows[1:]
+            topics[title] = topics.get(title, [])
+            for row in rows:
+                row = row.strip()
+                if row:
+                    topics[title].append(row)
+
+        return topics
+
+
+def format_md(topics):
+    s = ''
+    for t, items in topics.items():
+        s += f'Did - {t}:\n'
+        for i in items:
+            s += f'* {i}\n'
+
+        s += '\n'
+
+    return s.strip()
+
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filename')
+    args = parser.parse_args()
+
+    topics = parse(args.filename)
+    md = format_md(topics)
+    print(md)
