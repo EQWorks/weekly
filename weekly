@@ -24,7 +24,11 @@ def parse(journal):
 def format_md(topics):
     s = ''
     for t, items in topics.items():
-        s += f'Did - {t}:\n'
+        if t.lower().startswith('doing'):
+            s += f'{t}:\n'
+        else:
+            s += f'Did - {t}:\n'
+
         for i in items:
             s += f'* {i}\n'
 
